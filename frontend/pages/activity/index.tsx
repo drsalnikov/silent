@@ -16,13 +16,10 @@ function ActivityPage({ data }: IActivities): JSX.Element {
 
 	const columns = [
 		{
-			name: 'ID',
-			selector: row => row.ID
-		},
-		{
 			name: 'Наименование мероприятия',
 			selector: row => row.Name,
-			wrap: true
+			wrap: true,
+			width: "70%"
 		},
 		{
 			name: 'Стоимость',
@@ -31,9 +28,6 @@ function ActivityPage({ data }: IActivities): JSX.Element {
 		{
 			name: 'Статус',
 			selector: row => row.IsActive,
-		},
-		{
-			name: 'Действия'
 		}
 	];
 
@@ -45,8 +39,8 @@ function ActivityPage({ data }: IActivities): JSX.Element {
 
 	return (
 		<>
+			<Htag tag='h2'>Мероприятия</Htag>
 			<DataTable
-				title="Мероприятия"
 				columns={columns}
 				data={data}
 				highlightOnHover

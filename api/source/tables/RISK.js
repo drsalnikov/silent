@@ -3,7 +3,7 @@ class Risk{
         this.ID = ID;
         this.Name = Name;
         this.CITPROC = CITPROC;    
-        this.Damage = Damage;    
+        this.Damage = Damage;        
     }
 }
 

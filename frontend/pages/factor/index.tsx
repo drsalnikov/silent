@@ -16,20 +16,14 @@ function FactorPage({ data }: IFactors): JSX.Element {
 
 	const columns = [
 		{
-			name: 'ID',
-			selector: row => row.ID
-		},
-		{
 			name: 'Наименование фактора',
 			selector: row => row.Name,
-			wrap: true
+			wrap: true,
+			width: "70%"
 		},
 		{
 			name: 'Тип',
 			selector: row => row.Type,
-		},
-		{
-			name: 'Действия',
 		}
 	];
 
@@ -41,8 +35,8 @@ function FactorPage({ data }: IFactors): JSX.Element {
 
 	return (
 		<>
+			<Htag tag='h2'>Факторы рисков</Htag>
 			<DataTable
-				title="Факторы рисков"
 				columns={columns}
 				data={data}
 				highlightOnHover

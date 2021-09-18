@@ -1,17 +1,16 @@
-/* eslint-disable linebreak-style */
 const config = {
   user: '',
   password: '',
   server: '',
-  //server : '127.0.0.1',
-  database: '',
+  database: 'Champ',
   options: {
     trustedconnection: true,
     enableArithAort: true,
     instancename: 'SQLEXPRESS',
     trustServerCertificate: true,
   },
-  port: 54913,
+  port: 59934,
+
 };
 
 module.exports = config;

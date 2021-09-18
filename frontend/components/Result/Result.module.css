@@ -1,0 +1,31 @@
+.wrapper {
+	display: grid;
+	grid-template-columns: 1fr;
+	align-items: center;
+
+	grid-template-areas:
+		"params"
+		"result";
+}
+
+.row {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.button {
+	padding: 10px;
+	text-align: center;
+}
+
+.params {
+	grid-area: params;
+	margin-bottom: 50px;
+}
+
+.result {
+	grid-area: result;
+	margin-bottom: 20px;
+}

@@ -5,7 +5,7 @@ import { Header } from './Header/Header';
 import React, { FunctionComponent, useState, KeyboardEvent, useRef } from 'react';
 import { Sidebar } from './Sidebar/Sidebar';
 import { Footer } from './Footer/Footer';
-//import { AppContextProvider, IAppContext } from '../context/app.context';
+import { AppContextProvider, IAppContext } from '../context/app.context';
 import { Up } from '../components';
 
 const Layout = ({ children }: LayoutProps): JSX.Element => {
@@ -46,6 +46,7 @@ export const withLayout = <T extends Record<string, unknown>>(Component: Functio
 		return (
 			<Layout>
 				<Component {...props} />
-			</Layout>);
+			</Layout>
+		);
 	};
 };

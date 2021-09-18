@@ -8,8 +8,9 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { API } from '../../helpers/api';
 import DataTable from 'react-data-table-component';
-import { Button, Divider, Htag } from '../../components';
+import { Button, Divider, Htag, P } from '../../components';
 import cn from 'classnames';
+import { ItFactorRisk } from '../../page-components'
 
 function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.Element {
 
@@ -31,9 +32,6 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 		{
 			name: 'Вероятность',
 			selector: row => row.Percent,
-		},
-		{
-			name: 'Действия'
 		}
 	];
 
@@ -49,8 +47,9 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 
 	return (
 		<>
+			<Htag tag='h2'>{`ИТ-процесс: ${process?.Name}`}</Htag>
+			<P>{`Риск: ${risk?.Name}`}</P>
 			<DataTable
-				title={`ИТ процесс: ${process?.Name} \ Риск: ${risk?.Name}`}
 				columns={columns}
 				data={dataFactorRisks}
 				highlightOnHover
@@ -67,7 +66,7 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 
 export default withLayout(FactorRiskPage);
 
-export const getStaticProps: GetStaticProps<IFactorRisks> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
+export const getServerSideProps: GetStaticProps<IFactorRisks> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
 
 	if (!params) {
 		return {
@@ -75,12 +74,19 @@ export const getStaticProps: GetStaticProps<IFactorRisks> = async ({ params }: G
 		};
 	};
 
-	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + params.id);
-	const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.id + params.idrisk);
-	const { data: dataFactorRisks } = await axios.get<IFactorRisk[]>(API.factorRisk.byRisk + params.idrisk);
+	const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.id + params.id);
+	const risk: IRisk | undefined = dataRisks.shift();
+
+	if (!risk) {
+		return {
+			notFound: true
+		};
+	};
+
+	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + risk?.CITPROC);
+	const { data: dataFactorRisks } = await axios.get<IFactorRisk[]>(API.factorRisk.byRisk + params.id);
 
 	const process: IProc | undefined = dataProcess.shift();
-	const risk: IRisk | undefined = dataRisks.shift();
 
 	return {
 		props: { process, risk, dataFactorRisks }

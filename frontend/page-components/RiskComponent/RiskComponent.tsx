@@ -1,42 +1,24 @@
 import React from 'react';
 import { IProc, IProcesses, IRisk } from '../../interfaces/processes.interface';
 import DataTable, { TableProps, TableRow } from 'react-data-table-component';
-import { Button, Divider, Htag } from '../../components';
+import { RiskForm, Htag } from '../../components';
 import { ItFactorReduction } from '..';
 import cn from 'classnames';
 import styles from './RiskComponent.module.css';
+import { useRouter } from 'next/router';
 
-export const Risk = ({ data }: any): JSX.Element => {
+export const Risk = (itproc: IProc): JSX.Element => {
 
-	const columns = [
-		{
-			name: 'ID',
-			selector: row => row.ID,
-		},
-		{
-			name: 'Наименование риска',
-			selector: row => row.Name,
-		},
-		{
-			name: 'Ущерб',
-			selector: row => row.Damage,
-		}
-	];
+	const router = useRouter();
+	const { id } = router.query;
 
 	return (
 		<div className={styles.wrapper}>
-			<DataTable
-				className={styles.table}
-				title={"Риски по ИТ процессу " + data.Name}
-				columns={columns}
-				data={data.Risk}
-				highlightOnHover
-				pointerOnHover
-				dense
-				expandableRows
-				expandableRowsComponent={ItFactorRisk}
-			/>
+			<div className={styles.title}>
+				<Htag tag='h1'>{"Добавить риск по ИТ-Процессу"}</Htag>
+			</div>
+			<RiskForm
+				CITPROC={id} />
 		</div>
-
 	);
 }

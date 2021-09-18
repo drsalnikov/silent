@@ -28,26 +28,23 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 		{
 			name: 'Уровень критичности',
 			selector: row => row.Level,
-		},
-		{
-			name: 'Действия'
 		}
 	];
 
 	const router = useRouter();
 
 	const onRowClick = (row: IProc) => {
-		router.push(`itprocesses/${row.ID}/risk`);
+		router.push(`risk/${row.ID}`);
 	};
 
 	const onButtonClick = () => {
-		router.push(`itprocesses/new`);
+		router.push(`/new/itprocesses`);
 	};
 
 	return (
 		<>
+			<Htag tag='h2'>ИТ процессы</Htag>
 			<DataTable
-				title="ИТ процессы"
 				columns={columns}
 				data={data}
 				highlightOnHover

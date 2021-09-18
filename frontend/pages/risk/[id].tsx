@@ -1,16 +1,16 @@
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, GetServerSideProps } from 'next';
 import React from 'react';
 import axios from 'axios';
-import { IProc, IRisk, IRisks } from '../../../../interfaces/processes.interface';
+import { IProc, IRisk, IRisks } from '../../interfaces/processes.interface';
 
-import { withLayout } from '../../../../layout/Layout';
+import { withLayout } from '../../layout/Layout';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
-import { API } from '../../../../helpers/api';
+import { API } from '../../helpers/api';
 import DataTable from 'react-data-table-component';
-import { Button, Divider, Htag } from '../../../../components';
+import { Button, Divider, Htag } from '../../components';
 import cn from 'classnames';
-import { ItFactorRisk } from '../../../../page-components'
+import { ItFactorRisk } from '../../page-components'
 
 function RiskPage({ process, dataRisks }: IRisks): JSX.Element {
 
@@ -31,22 +31,20 @@ function RiskPage({ process, dataRisks }: IRisks): JSX.Element {
 	];
 
 	const router = useRouter();
-	const { id, idrisk } = router.query;
+	const { id } = router.query;
 
 	const onRowClick = (row: IRisk) => {
-		//`itprocesses/${id}/risk/${idrisk}/factor`
-
-		router.push('itprocesses');
+		router.push("/factorrisk/" + row.ID);
 	};
 
 	const onButtonClick = () => {
-		//router.push("new");
+		router.push("/new/risk/" + process?.ID);
 	};
 
 	return (
 		<>
+			<Htag tag='h2'>{`Риски по процессу ${process?.Name}`}</Htag>
 			<DataTable
-				title={`Риски по процессу ${process?.Name}`}
 				columns={columns}
 				data={dataRisks}
 				highlightOnHover
@@ -63,24 +61,21 @@ function RiskPage({ process, dataRisks }: IRisks): JSX.Element {
 
 export default withLayout(RiskPage);
 
-/*
 export const getStaticPaths: GetStaticPaths = async () => {
 	let paths: string[] = [];
 	const { data } = await axios.get<IRisk[]>(API.risk.get);
 
 	data.map(i => {
-		paths.push(`/itprocesses/${i.CITPROC}/risk`);
+		paths.push(`/risk/${i.CITPROC}`);
 	});
-	console.log(data);
 
 	return {
 		paths,
 		fallback: true
 	};
 };
-*/
 
-export const getServerSideProps: GetStaticProps<IRisks> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
+export const getStaticProps: GetStaticProps<IRisks> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
 
 	if (!params) {
 		return {

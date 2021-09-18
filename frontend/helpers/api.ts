@@ -11,10 +11,15 @@ export const API = {
 		get: process.env.NEXT_PUBLIC_DOMAIN + 'api/activityAll'
 	},
 	risk: {
+		get: process.env.NEXT_PUBLIC_DOMAIN + 'api/riskall',
 		byProcess: process.env.NEXT_PUBLIC_DOMAIN + 'api/riskbyprocess/',
 		id: process.env.NEXT_PUBLIC_DOMAIN + 'api/risk/',
+		post: process.env.NEXT_PUBLIC_DOMAIN + 'api/risk'
 	},
 	factorRisk: {
 		byRisk: process.env.NEXT_PUBLIC_DOMAIN + 'api/factorRiskByRisk/'
 	},
+	calc: {
+		get: process.env.NEXT_PUBLIC_DOMAIN + 'api/calcRes/'
+	}
 };

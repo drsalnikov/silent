@@ -143,6 +143,12 @@ router.route('/activitybyfactor/:id').get((request, response) => {
   });
 });
 
+router.route('/calRes/:budget').get((request, response) => {
+  dboperations.calcResult(request.params.budget).then((result) => {
+    response.json(result[0]);
+  });
+});
+
 const port = process.env.PORT || 8090;
 app.listen(port);
 console.log(`ItProc API is running at ${port}`);

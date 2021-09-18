@@ -39,6 +39,10 @@ export interface IReduction extends Record<string, unknown> {
 	NewPercent: number;
 }
 
+export interface IReductions extends Record<string, unknown> {
+	data: IReduction[];
+}
+
 export interface IProcesses extends Record<string, unknown> {
 	data: IProc[];
 }

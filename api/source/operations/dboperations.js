@@ -58,6 +58,19 @@ async function getFactorById(id) {
     console.log(error);
   }
 }
+////POST FACTOR
+async function addFactor(factor) {
+  try {
+    const pool = await sql.connect(config);
+    const insertFactor = await pool.request()
+      .input('Name', sql.NVarChar, factor.Name)      
+      .input('Type', sql.NVarChar, factor.Type)
+      .execute('InsertFactor');
+    return insertFactor.recordsets;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function getFactorRisk() {
   try {
@@ -80,6 +93,21 @@ async function getFactorRiskById(id) {
     console.log(error);
   }
 }
+/////POST FactorRisk
+async function addFactorRisk(factorRisk) {
+  try {
+    const pool = await sql.connect(config);
+    const insertFactorRisk = await pool.request()
+      .input('CFACTOR', sql.Int, factorRisk.CFACTOR)      
+      .input('CRISK', sql.Int, factorRisk.CRISK)
+      .input('Set', sql.Int, factorRisk.Set)
+      .input('Percent', sql.Float, factorRisk.Percent)
+      .execute('InsertFactorRisk');
+    return insertFactorRisk.recordsets;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function getReduction() {
   try {
@@ -100,6 +128,20 @@ async function getReductionById(id) {
     return reduction.recordsets;
   } catch (error) {
     console.log(error);
+  }
+}
+//////////////POST REDUCTION
+async function addReduction(reduction) {
+  try {
+    const pool = await sql.connect(config);
+    const insertReduction = await pool.request()
+      .input('CACTIVITY', sql.Int, reduction.CFACTOR)      
+      .input('CFACTORRISK', sql.Int, reduction.CRISK)
+      .input('NewPercent', sql.Float, reduction.NewPercent)
+      .execute('InsertReduction');
+    return insertReduction.recordsets;
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -146,6 +188,20 @@ async function getRiskById(id) {
     console.log(error);
   }
 }
+/////////POST RISK
+async function addRisk(risk) {
+  try {
+    const pool = await sql.connect(config);
+    const insertRisk = await pool.request()
+      .input('Name', sql.Int, risk.CFACTOR)      
+      .input('CITPROC', sql.Int, risk.CRISK)
+      .input('Damage', sql.Float, risk.NewPercent)
+      .execute('InsertRisk');
+    return insertRisk.recordsets;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function getActivity() {
   try {
@@ -183,13 +239,14 @@ async function getRiskByProcess(id) {
 
 async function getFactorRiskByRisk(id) {
   try {
-    const pool = await sql.connect(config);
-    const risk = await pool.request()
-      .input('input_parameter', sql.Int, id)
-      .query('SELECT * from FACTORRISK where crisk = @input_parameter');
-    return risk.recordsets;
-  } catch (error) {
-    console.log(error);
+      let pool = await sql.connect(config);
+      let risk = await pool.request()
+          .input('input_parameter', sql.Int, id)
+          .query("SELECT * from FACTORRISK fr join FACTOR f on fr.CFACTOR = f.ID where crisk = @input_parameter");
+      return risk.recordsets;
+  }
+  catch (error) {
+      console.log(error);
   }
 }
 
@@ -217,6 +274,20 @@ async function getActivityByfactor(id) {
   }
 }
 
+async function calcResult(budget) {
+  try {
+    const pool = await sql.connect(config);
+    const finalRes = await pool.request()
+      .input('MaxBudget', sql.Int, budget)
+      .execute('final_raschet');
+    const result = await pool.request() 
+      .query('SELECT * from RESULT')
+    return result.recordsets;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   getItProc,
   getItProcById,
@@ -224,18 +295,22 @@ module.exports = {
 
   getFactor,
   getFactorById,
+  addFactor,
 
   getFactorRisk,
   getFactorRiskById,
+  addFactorRisk,
 
   getReduction,
   getReductionById,
+  addReduction,
 
   getResult,
   getResultById,
 
   getRisk,
   getRiskById,
+  addRisk,
 
   getActivity,
   getActivityById,
@@ -247,4 +322,6 @@ module.exports = {
   getReductionByFactorRisk,
 
   getActivityByfactor,
+
+  calcResult
 };
