@@ -14,8 +14,9 @@ import axios from 'axios';
 export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm();
 	const [summa, setSumma] = useState<string>("");
-	const [riskBefore, setRiskBefore] = useState<string>("");
-	const [riskAfter, setRiskAfter] = useState<string>("");
+	const [riskBefore, setRiskBefore] = useState<number>(0);
+	const [riskAfter, setRiskAfter] = useState<number>(0);
+	const [effect, setEffect] = useState<number>(0);
 	const [result, setResult] = useState<IResult[]>([]);
 
 	const columns = [
@@ -27,10 +28,6 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 		{
 			name: 'Стоимость',
 			selector: row => row.Cost,
-		},
-		{
-			name: 'Эффективность',
-			selector: row => row.Economy,
 		}
 	];
 
@@ -44,8 +41,10 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 		try {
 			const { data } = await axios.get<IResult[]>(API.calc.get + summa);
 			setResult(data);
-			setRiskBefore(data[0]?.StartRisk);
-			setRiskAfter(data[0]?.FinalRisk);
+
+			setRiskBefore(Math.round(Number(data[0]?.StartRisk) * 100) / 100);
+			setRiskAfter(Math.round(Number(data[0]?.FinalRisk) * 100) / 100);
+			setEffect(Math.round(Number(data[0]?.Economy) * 100) / 100);
 			reset();
 		} catch (e: any) {
 			console.log(e.message);
@@ -82,8 +81,9 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 					pointerOnHover
 				/>
 				<Divider />
-				<P>Текущий риск: {riskBefore}</P>
-				<P>Риск после выполнения мероприятий: {riskAfter}</P>
+				<P>Текущий риск: {riskBefore.toLocaleString()} руб.</P>
+				<P>Риск после выполнения мероприятий: {riskAfter.toLocaleString()} руб.</P>
+				<P>Эффективность выполнения мероприятий: {effect.toLocaleString()} руб.</P>
 			</div>
 		</div>
 	);

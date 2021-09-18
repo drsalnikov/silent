@@ -11,7 +11,7 @@ function ResultPage(): JSX.Element {
 
 	return (
 		<>
-			<Htag tag='h2'>Рассчет</Htag>
+			<Htag tag='h2'>Расчёт</Htag>
 			<Result />
 		</>
 	);
