@@ -37,10 +37,6 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 
 	const router = useRouter();
 
-	const onRowClick = (row: IFactorRisk) => {
-		//router.push(`itprocesses/${row.ID}/risk`);
-	};
-
 	const onButtonClick = () => {
 		//router.push("new");
 	};
@@ -54,7 +50,6 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 				data={dataFactorRisks}
 				highlightOnHover
 				pointerOnHover
-				onRowClicked={onRowClick}
 			/>
 			<Divider />
 			<div>
