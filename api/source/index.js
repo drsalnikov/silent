@@ -151,4 +151,4 @@ router.route('/calRes/:budget').get((request, response) => {
 
 const port = process.env.PORT || 8090;
 app.listen(port);
-console.log(`ItProc API is running at ${port}`);
+console.log(`API is running at ${port}`);

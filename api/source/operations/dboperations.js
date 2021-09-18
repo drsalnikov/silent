@@ -63,7 +63,7 @@ async function addFactor(factor) {
   try {
     const pool = await sql.connect(config);
     const insertFactor = await pool.request()
-      .input('Name', sql.NVarChar, factor.Name)      
+      .input('Name', sql.NVarChar, factor.Name)
       .input('Type', sql.NVarChar, factor.Type)
       .execute('InsertFactor');
     return insertFactor.recordsets;
@@ -87,7 +87,7 @@ async function getFactorRiskById(id) {
     const pool = await sql.connect(config);
     const factorRisk = await pool.request()
       .input('input_parameter', sql.Int, id)
-      .query('SELECT * from FACTORRISK where ID = @input_parameter');
+      .query('SELECT fr.*, f.Name, f.Type from FACTORRISK fr join FACTOR f on fr.CFACTOR = f.ID where fr.ID = @input_parameter');
     return factorRisk.recordsets;
   } catch (error) {
     console.log(error);
@@ -98,7 +98,7 @@ async function addFactorRisk(factorRisk) {
   try {
     const pool = await sql.connect(config);
     const insertFactorRisk = await pool.request()
-      .input('CFACTOR', sql.Int, factorRisk.CFACTOR)      
+      .input('CFACTOR', sql.Int, factorRisk.CFACTOR)
       .input('CRISK', sql.Int, factorRisk.CRISK)
       .input('Set', sql.Int, factorRisk.Set)
       .input('Percent', sql.Float, factorRisk.Percent)
@@ -135,7 +135,7 @@ async function addReduction(reduction) {
   try {
     const pool = await sql.connect(config);
     const insertReduction = await pool.request()
-      .input('CACTIVITY', sql.Int, reduction.CFACTOR)      
+      .input('CACTIVITY', sql.Int, reduction.CFACTOR)
       .input('CFACTORRISK', sql.Int, reduction.CRISK)
       .input('NewPercent', sql.Float, reduction.NewPercent)
       .execute('InsertReduction');
@@ -193,7 +193,7 @@ async function addRisk(risk) {
   try {
     const pool = await sql.connect(config);
     const insertRisk = await pool.request()
-      .input('Name', sql.Int, risk.CFACTOR)      
+      .input('Name', sql.Int, risk.CFACTOR)
       .input('CITPROC', sql.Int, risk.CRISK)
       .input('Damage', sql.Float, risk.NewPercent)
       .execute('InsertRisk');
@@ -239,14 +239,14 @@ async function getRiskByProcess(id) {
 
 async function getFactorRiskByRisk(id) {
   try {
-      let pool = await sql.connect(config);
-      let risk = await pool.request()
-          .input('input_parameter', sql.Int, id)
-          .query("SELECT * from FACTORRISK fr join FACTOR f on fr.CFACTOR = f.ID where crisk = @input_parameter");
-      return risk.recordsets;
+    let pool = await sql.connect(config);
+    let risk = await pool.request()
+      .input('input_parameter', sql.Int, id)
+      .query("SELECT fr.*, f.Name, f.Type from FACTORRISK fr join FACTOR f on fr.CFACTOR=f.ID where crisk = @input_parameter");
+    return risk.recordsets;
   }
   catch (error) {
-      console.log(error);
+    console.log(error);
   }
 }
 
@@ -255,7 +255,7 @@ async function getReductionByFactorRisk(id) {
     const pool = await sql.connect(config);
     const reduction = await pool.request()
       .input('input_parameter', sql.Int, id)
-      .query('SELECT * from REDUCTION r join ACTIVITY a on r.cactivity = a.id where cfactorrisk = @input_parameter');
+      .query('SELECT r.*, a.Name, a.Summa from REDUCTION r join ACTIVITY a on r.CACTIVITY = a.ID where cfactorrisk = @input_parameter');
     return reduction.recordsets;
   } catch (error) {
     console.log(error);
@@ -280,8 +280,8 @@ async function calcResult(budget) {
     const finalRes = await pool.request()
       .input('MaxBudget', sql.Int, budget)
       .execute('final_raschet');
-    const result = await pool.request() 
-      .query('SELECT * from RESULT')
+    const result = await pool.request()
+      .query('SELECT r.*, a.Name, a.Summa from RESULT r join ACTIVITY a on r.CACTIVITY = a.ID')
     return result.recordsets;
   } catch (err) {
     console.log(err);

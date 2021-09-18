@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticPathsContext, GetStaticProps, GetStaticPropsContext } from 'next';
 import React from 'react';
 import axios from 'axios';
-import { IProc, IRisk, IRisks, IFactorRisk, IFactorRisks } from '../../interfaces/processes.interface';
+import { IProc, IRisk, IRisks, IFactorRisk, IFactorRisks, IReductions, IReduction } from '../../interfaces/processes.interface';
 
 import { withLayout } from '../../layout/Layout';
 import { useRouter } from 'next/router';
@@ -12,30 +12,24 @@ import { Button, Divider, Htag, P } from '../../components';
 import cn from 'classnames';
 import { ItFactorRisk } from '../../page-components'
 
-function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.Element {
+function ReductionPage({ process, risk, factorrisk, dataReduction }: IReductions): JSX.Element {
 
 	const columns = [
 		{
-			name: 'Наименование фактора',
+			name: 'Наименование мероприятия',
 			selector: row => row.Name,
 			wrap: true,
 			width: '60%'
 		},
 		{
-			name: 'Тип',
-			selector: row => row.Type,
+			name: 'Стоимость',
+			selector: row => row.Summa,
 		},
 		{
-			name: 'Группа',
-			selector: row => row.Set,
-		},
-		{
-			name: 'Вероятность',
-			selector: row => row.Percent,
+			name: 'Новая вероятность',
+			selector: row => row.NewPercent,
 		}
 	];
-
-	const router = useRouter();
 
 	const onButtonClick = () => {
 		//router.push("new");
@@ -44,10 +38,11 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 	return (
 		<>
 			<Htag tag='h2'>{`ИТ-процесс: ${process?.Name}`}</Htag>
-			<P>{`Риск: ${risk?.Name}`}</P>
+			<Htag tag='h2'>{`Риск: ${risk?.Name}`}</Htag>
+			<Htag tag='h2'>{`Фактор: ${factorrisk?.Name}`}</Htag>
 			<DataTable
 				columns={columns}
-				data={dataFactorRisks}
+				data={dataReduction}
 				highlightOnHover
 				pointerOnHover
 			/>
@@ -59,9 +54,9 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 	);
 }
 
-export default withLayout(FactorRiskPage);
+export default withLayout(ReductionPage);
 
-export const getServerSideProps: GetStaticProps<IFactorRisks> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
+export const getServerSideProps: GetStaticProps<IReductions> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
 
 	if (!params) {
 		return {
@@ -69,21 +64,24 @@ export const getServerSideProps: GetStaticProps<IFactorRisks> = async ({ params 
 		};
 	};
 
-	const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.id + params.id);
-	const risk: IRisk | undefined = dataRisks.shift();
+	const { data: dataFactorrisk } = await axios.get<IFactorRisk[]>(API.factorRisk.id + params.id);
+	const factorrisk: IFactorRisk | undefined = dataFactorrisk.shift();
 
-	if (!risk) {
+	if (!factorrisk) {
 		return {
 			notFound: true
 		};
 	};
 
-	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + risk?.CITPROC);
-	const { data: dataFactorRisks } = await axios.get<IFactorRisk[]>(API.factorRisk.byRisk + params.id);
+	const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.id + factorrisk.CRISK);
+	const risk: IRisk | undefined = dataRisks.shift();
 
+	const { data: dataReduction } = await axios.get<IReduction[]>(API.reduction.byfactorRisk + params.id);
+
+	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + risk?.CITPROC);
 	const process: IProc | undefined = dataProcess.shift();
 
 	return {
-		props: { process, risk, dataFactorRisks }
+		props: { process, risk, factorrisk, dataReduction }
 	};
 };

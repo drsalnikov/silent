@@ -38,7 +38,7 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 	const router = useRouter();
 
 	const onRowClick = (row: IFactorRisk) => {
-		//router.push(`itprocesses/${row.ID}/risk`);
+		router.push(`/reduction/${row.ID}`);
 	};
 
 	const onButtonClick = () => {
@@ -48,7 +48,7 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 	return (
 		<>
 			<Htag tag='h2'>{`ИТ-процесс: ${process?.Name}`}</Htag>
-			<P>{`Риск: ${risk?.Name}`}</P>
+			<Htag tag='h2'>{`Риск: ${risk?.Name}`}</Htag>
 			<DataTable
 				columns={columns}
 				data={dataFactorRisks}

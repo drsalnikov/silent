@@ -36,11 +36,15 @@ export interface IFactorRisk extends Record<string, unknown> {
 export interface IReduction extends Record<string, unknown> {
 	ID: number;
 	Name: string;
-	NewPercent: number;
+	Summa: string;
+	NewPercent: string;
 }
 
 export interface IReductions extends Record<string, unknown> {
-	data: IReduction[];
+	process: IProc | undefined;
+	risk: IRisk | undefined;
+	factorrisk: IFactorRisk | undefined;
+	dataReduction: IReduction[];
 }
 
 export interface IProcesses extends Record<string, unknown> {

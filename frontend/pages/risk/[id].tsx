@@ -24,9 +24,6 @@ function RiskPage({ process, dataRisks }: IRisks): JSX.Element {
 		{
 			name: 'Ущерб',
 			selector: row => row.Damage,
-		},
-		{
-			name: 'Действия'
 		}
 	];
 
@@ -34,11 +31,11 @@ function RiskPage({ process, dataRisks }: IRisks): JSX.Element {
 	const { id } = router.query;
 
 	const onRowClick = (row: IRisk) => {
-		router.push("/factorrisk/" + row.ID);
+		router.push(`/factorrisk/${row.ID}`);
 	};
 
 	const onButtonClick = () => {
-		router.push("/new/risk/" + process?.ID);
+		router.push(`/new/risk/${process?.ID}`);
 	};
 
 	return (
