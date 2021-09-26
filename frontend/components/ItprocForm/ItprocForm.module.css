@@ -24,16 +24,6 @@
 	grid-column: start / end;
 }
 
-.info {
-	margin-left: 15px;
-}
-
-.rating {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	gap: 20px;
-}
-
 .panel {
 	position: relative;
 

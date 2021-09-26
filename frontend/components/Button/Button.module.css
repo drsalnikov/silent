@@ -24,14 +24,25 @@
 }
 
 .ghost {
-	color: var(--black);
+	color: var(--white);
 	border: 1px solid var(--gray-light);
-	background: none;
+	background: var(--gray);
 }
 
 .ghost:hover {
 	color: var(--white);
-	background-color: var(--primary);
+	background-color: var(--gray-dark);
+}
+
+.warning {
+	color: var(--white);
+	border: 1px solid var(--gray-light);
+	background: var(--red-light);
+}
+
+.warning:hover {
+	color: var(--white);
+	background-color: var(--red);
 }
 
 .arrow {

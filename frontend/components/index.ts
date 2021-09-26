@@ -14,3 +14,7 @@ export * from './Up/Up';
 export * from './ItprocForm/ItprocForm';
 export * from './RiskForm/RiskForm';
 export * from './Result/Result';
+export * from './FactorRiskForm/FactorRiskForm';
+export * from './ReductionForm/ReductionForm';
+export * from './ActivityForm/ActivityForm';
+export * from './FactorForm/FactorForm';

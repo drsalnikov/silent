@@ -17,10 +17,13 @@ export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.E
 	const [error, setError] = useState<string>();
 
 	const onSubmit = async (formData: IRiskForm) => {
-		console.log({ CITPROC, ...formData });
-		//const { data } = await axios.post(API.risk.post, { CITPROC, ...formData });
-		setIsSuccess(true);
-		reset();
+		const res = await axios.post(API.risk.post, { CITPROC, ...formData });
+		if (res.status == 201) {
+			setIsSuccess(true);
+			reset();
+		} else {
+			setError(res.statusText);
+		}
 	};
 
 	return (
@@ -28,16 +31,15 @@ export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.E
 			<div className={cn(styles.reviewForm, className)}
 				{...props}
 			>
-				<P>${CITPROC}</P>
 				<Input
 					{...register('Name', { required: { value: true, message: 'Наименование риска' } })}
-					placeholder='Имя'
+					placeholder='Наименование риска'
 					error={errors.Name}
 					className={styles.description}
 					aria-invalid={errors.Name ? true : false}
 				/>
-				<Input
-					{...register('Damage', { required: { value: true, message: 'Потенциальный ущерб' } })}
+				<Input type="number"
+					{...register('Damage', { required: { value: true, message: 'Потенциальный ущерб' }, valueAsNumber: true })}
 					placeholder='Потенциальный ущерб'
 					error={errors.Damage}
 					className={styles.description}
@@ -45,7 +47,6 @@ export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.E
 				/>
 				<div className={styles.submit}>
 					<Button appearance="primary" onClick={() => clearErrors()}>Сохранить</Button>
-					<span className={styles.info}>*</span>
 				</div>
 			</div>
 			{isSuccess && <div className={cn(styles.success, styles.panel)} role="alert">

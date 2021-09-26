@@ -1,6 +1,5 @@
 .input {
 	padding: 7px 15px;
-
 	color: var(--black);
 	border: none;
 	border-radius: 5px;
@@ -20,10 +19,6 @@
 
 .error {
 	border: 1px solid var(--red);
-}
-
-.inputWrapper {
-	position: relative;
 }
 
 .errorMessage {

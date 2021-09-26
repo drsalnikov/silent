@@ -7,7 +7,7 @@ import { FirstLevelMenuItem } from '../interfaces/menu.interface';
 
 export const firstLevelMenu: FirstLevelMenuItem[] = [
 	{ route: 'itprocesses', name: 'ИТ-процессы', icon: <CoursesIcon />, id: Category.Itproc },
-	{ route: 'factor', name: 'Факторы рисков', icon: <ServicesIcon />, id: Category.Factor },
+	{ route: 'factor', name: 'Факторы', icon: <ServicesIcon />, id: Category.Factor },
 	{ route: 'activity', name: 'Мероприятия', icon: <BooksIcon />, id: Category.Activity },
 	{ route: 'result', name: 'Расчет', icon: <ProductsIcon />, id: Category.Result }
 ];

@@ -13,7 +13,7 @@ import axios from 'axios';
 import { API } from '../../helpers/api';
 import { useState } from 'react';
 
-export const ItprocForm = ({ ID, Level, RTO, Name, className, ...props }: ItprocFormProps): JSX.Element => {
+export const ItprocForm = ({ className, ...props }: ItprocFormProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm<IprocForm>();
 
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -37,7 +37,7 @@ export const ItprocForm = ({ ID, Level, RTO, Name, className, ...props }: Itproc
 			>
 				<Input
 					{...register('Name', { required: { value: true, message: 'Наименование' } })}
-					placeholder='Имя'
+					placeholder='Наименование'
 					error={errors.Name}
 					className={styles.description}
 					aria-invalid={errors.Name ? true : false}
@@ -51,22 +51,13 @@ export const ItprocForm = ({ ID, Level, RTO, Name, className, ...props }: Itproc
 				/>
 				<Input
 					{...register('Level', { required: { value: true, message: 'Уровень критичности' } })}
-					placeholder='Level'
+					placeholder='Уровень критичности'
 					className={styles.description}
 					error={errors.Level}
 					aria-invalid={errors.Level ? true : false}
 				/>
-				<Textarea
-					{...register('Description', { required: { value: true, message: 'Заполните описание' } })}
-					placeholder='Описание'
-					className={styles.description}
-					error={errors.Description}
-					aria-label='Описание'
-					aria-invalid={errors.Level ? true : false}
-				/>
 				<div className={styles.submit}>
 					<Button appearance="primary" onClick={() => clearErrors()}>Сохранить</Button>
-					<span className={styles.info}>*</span>
 				</div>
 			</div>
 			{isSuccess && <div className={cn(styles.success, styles.panel)} role="alert">

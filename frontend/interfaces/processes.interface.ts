@@ -5,6 +5,14 @@ export interface IProc extends Record<string, unknown> {
 	Level: string;
 }
 
+export interface IProcEdit extends Record<string, unknown> {
+	process: IProc
+}
+
+export interface IProcesses extends Record<string, unknown> {
+	data: IProc[];
+}
+
 export interface IRisk extends Record<string, unknown> {
 	ID: number;
 	CITPROC: number;
@@ -47,14 +55,15 @@ export interface IReductions extends Record<string, unknown> {
 	dataReduction: IReduction[];
 }
 
-export interface IProcesses extends Record<string, unknown> {
-	data: IProc[];
-}
-
 export interface IFactor extends Record<string, unknown> {
 	ID: number;
 	Name: string;
 	Type: string;
+}
+
+export interface IFactorCard extends Record<string, unknown> {
+	factor: IFactor;
+	activities: IActivity[];
 }
 
 export interface IFactors extends Record<string, unknown> {

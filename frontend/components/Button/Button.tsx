@@ -11,6 +11,7 @@ export const Button = ({ appearance, arrow = 'none', children, className, ...pro
 			className={cn(styles.button, className, {
 				[styles.primary]: appearance == 'primary',
 				[styles.ghost]: appearance == 'ghost',
+				[styles.warning]: appearance == 'warning'
 			})}
 			{...props}
 		>

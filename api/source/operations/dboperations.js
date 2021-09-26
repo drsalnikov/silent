@@ -37,6 +37,33 @@ async function addItProc(itProc) {
   }
 }
 
+/*async function deleteItProcById(id) {
+  try {
+    const pool = await sql.connect(config);
+    const itProc = await pool.request()
+      .input('input_parameter', sql.Int, id)
+      .query('DELETE from ITPROC where ID = @input_parameter');
+    return itProc.recordsets;
+  } catch (error) {
+    console.log(error);
+  }
+}*/
+
+async function modifyItProc(itProc) {
+  try {
+    const pool = await sql.connect(config);
+    const insertItProc = await pool.request()
+      .input('Id', sql.Int, itProc.ID)
+      .input('Name', sql.NVarChar, itProc.Name)
+      .input('RTO', sql.Int, itProc.RTO)
+      .input('Level', sql.NVarChar, itProc.Level)
+      .query('UPDATE ITPROC SET Name = @Name, RTO = @RTO, Level = @Level where ID = @ID');
+    return insertItProc.recordsets;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 async function getFactor() {
   try {
     const pool = await sql.connect(config);
@@ -58,7 +85,7 @@ async function getFactorById(id) {
     console.log(error);
   }
 }
-////POST FACTOR
+
 async function addFactor(factor) {
   try {
     const pool = await sql.connect(config);
@@ -93,7 +120,7 @@ async function getFactorRiskById(id) {
     console.log(error);
   }
 }
-/////POST FactorRisk
+
 async function addFactorRisk(factorRisk) {
   try {
     const pool = await sql.connect(config);
@@ -130,13 +157,13 @@ async function getReductionById(id) {
     console.log(error);
   }
 }
-//////////////POST REDUCTION
+
 async function addReduction(reduction) {
   try {
     const pool = await sql.connect(config);
     const insertReduction = await pool.request()
-      .input('CACTIVITY', sql.Int, reduction.CFACTOR)
-      .input('CFACTORRISK', sql.Int, reduction.CRISK)
+      .input('CACTIVITY', sql.Int, reduction.CACTIVITY)
+      .input('CFACTORRISK', sql.Int, reduction.CFACTORRISK)
       .input('NewPercent', sql.Float, reduction.NewPercent)
       .execute('InsertReduction');
     return insertReduction.recordsets;
@@ -188,14 +215,14 @@ async function getRiskById(id) {
     console.log(error);
   }
 }
-/////////POST RISK
+
 async function addRisk(risk) {
   try {
     const pool = await sql.connect(config);
     const insertRisk = await pool.request()
-      .input('Name', sql.Int, risk.CFACTOR)
-      .input('CITPROC', sql.Int, risk.CRISK)
-      .input('Damage', sql.Float, risk.NewPercent)
+      .input('Name', sql.NVarChar, risk.Name)
+      .input('CITPROC', sql.Int, risk.CITPROC)
+      .input('Damage', sql.Decimal, risk.Damage)
       .execute('InsertRisk');
     return insertRisk.recordsets;
   } catch (err) {
@@ -222,6 +249,21 @@ async function getActivityById(id) {
     return activity.recordsets;
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function addActivity(activity) {
+  try {
+    const pool = await sql.connect(config);
+    const InsertActivity = await pool.request()
+      .input('Name', sql.NVarChar, activity.Name)
+      .input('Summa', sql.Decimal, activity.Summa)
+      .input('CFACTOR', sql.Int, activity.CFACTOR)
+      .input('IsActive', sql.Bit, activity.CFACTOR)
+      .execute('InsertActivity');
+    return InsertActivity.recordsets;
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -281,7 +323,7 @@ async function calcResult(budget) {
       .input('MaxBudget', sql.Int, budget)
       .execute('final_raschet');
     const result = await pool.request()
-      .query('SELECT r.*, a.Name, a.Summa from RESULT r join ACTIVITY a on r.CACTIVITY = a.ID')
+      .query('SELECT * from RESULT r join activity a on r.cactivity = a.id')
     return result.recordsets;
   } catch (err) {
     console.log(err);
@@ -292,6 +334,8 @@ module.exports = {
   getItProc,
   getItProcById,
   addItProc,
+  //deleteItProcById,
+  modifyItProc,
 
   getFactor,
   getFactorById,
@@ -314,6 +358,7 @@ module.exports = {
 
   getActivity,
   getActivityById,
+  addActivity,
 
   getRiskByProcess,
 

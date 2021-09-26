@@ -4,6 +4,6 @@ export interface ButtonProps extends
 	Omit<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
 	'onAnimationStart' | 'onDragStart' | 'onDragEnd' | 'onDrag' | 'ref'> {
 	children: ReactNode;
-	appearance: 'primary' | 'ghost';
+	appearance: 'primary' | 'ghost' | 'warning';
 	arrow?: 'right' | 'down' | 'none';
 }

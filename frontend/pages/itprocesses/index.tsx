@@ -2,15 +2,13 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
 import React from 'react';
 import axios from 'axios';
 import { IProc, IProcesses, IRisk } from '../../interfaces/processes.interface';
-
 import { withLayout } from '../../layout/Layout';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { API } from '../../helpers/api';
 import DataTable from 'react-data-table-component';
-import { Button, Divider, Htag } from '../../components';
+import { Button, Divider, Htag, Card } from '../../components';
 import cn from 'classnames';
-import { ItFactorRisk } from '../../page-components'
 
 function ItprocessesPage({ data }: IProcesses): JSX.Element {
 
@@ -19,7 +17,7 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 			name: 'Наименование процесса',
 			selector: row => row.Name,
 			wrap: true,
-			width: '60%'
+			width: "60%"
 		},
 		{
 			name: 'RTO',
@@ -34,7 +32,7 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 	const router = useRouter();
 
 	const onRowClick = (row: IProc) => {
-		router.push(`risk/${row.ID}`);
+		router.push(`itproc/${row.ID}`);
 	};
 
 	const onButtonClick = () => {
@@ -42,8 +40,9 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 	};
 
 	return (
-		<>
-			<Htag tag='h2'>ИТ процессы</Htag>
+		<Card>
+			<Htag tag='h1'>ИТ-процессы</Htag>
+			<Divider />
 			<DataTable
 				columns={columns}
 				data={data}
@@ -55,7 +54,7 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 			<div>
 				<Button onClick={onButtonClick} appearance='primary'>Добавить</Button>
 			</div>
-		</>
+		</Card>
 	);
 }
 
@@ -72,6 +71,7 @@ export const getStaticProps: GetStaticProps<IProcesses> = async () => {
 	}
 
 	return {
-		props: { data }
+		props: { data },
+		revalidate: 120
 	};
 };

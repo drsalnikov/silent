@@ -23,7 +23,8 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 		{
 			name: 'Наименование мероприятия',
 			selector: row => row.Name,
-			wrap: true
+			wrap: true,
+			width: '60%'
 		},
 		{
 			name: 'Стоимость',
@@ -70,8 +71,8 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 							aria-label="Выполнить рассчет">Рассчитать
 						</Button>
 					</div>
-
 				</form>
+				<Divider />
 			</div>
 			<div className={cn(className, styles.result)}>
 				<DataTable
