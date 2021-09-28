@@ -63,7 +63,7 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 						<P >Максимальный бюджет мероприятий</P>
 						<Input
 							className={styles.input}
-							placeholder="Рассчет..."
+							placeholder="Расчёт..."
 							value={summa}
 							onChange={(e) => setSumma(e.target.value)}
 							onKeyDown={handleKeyDown}
