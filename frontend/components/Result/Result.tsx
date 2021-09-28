@@ -61,7 +61,7 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 				<form onSubmit={handleSubmit(onSubmit)} className={cn(className, styles.search)} {...props} role="search">
 					<div className={cn(className, styles.row)}>
 						<P >Максимальный бюджет мероприятий</P>
-						<Input
+						<Input type='number'
 							className={styles.input}
 							placeholder="Расчёт..."
 							value={summa}
