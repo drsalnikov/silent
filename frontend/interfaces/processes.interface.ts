@@ -21,8 +21,12 @@ export interface IRisk extends Record<string, unknown> {
 }
 
 export interface IRisks extends Record<string, unknown> {
-	process: IProc | undefined;
+	itproc: IProc | undefined;
 	dataRisks: IRisk[];
+}
+
+export interface IRiskEdit extends Record<string, unknown> {
+	risk: IRisk
 }
 
 export interface IFactorRisks extends Record<string, unknown> {
@@ -37,8 +41,13 @@ export interface IFactorRisk extends Record<string, unknown> {
 	CRISK: number;
 	Name: string;
 	Type: string;
-	Set: string;
+	Set: number;
 	Percent: number;
+}
+
+export interface IFactorRiskEdit extends Record<string, unknown> {
+	factorrisk: IFactorRisk;
+	dataFactors: IFactor[];
 }
 
 export interface IReduction extends Record<string, unknown> {
@@ -49,7 +58,7 @@ export interface IReduction extends Record<string, unknown> {
 }
 
 export interface IReductions extends Record<string, unknown> {
-	process: IProc | undefined;
+	itproc: IProc | undefined;
 	risk: IRisk | undefined;
 	factorrisk: IFactorRisk | undefined;
 	dataReduction: IReduction[];
@@ -67,7 +76,12 @@ export interface IFactorCard extends Record<string, unknown> {
 }
 
 export interface IFactors extends Record<string, unknown> {
-	data: IFactor[];
+	dataFactors: IFactor[];
+	risk: IRisk;
+}
+
+export interface IFactorsData extends Record<string, unknown> {
+	dataFactors: IFactor[];
 }
 
 export interface IActivities extends Record<string, unknown> {

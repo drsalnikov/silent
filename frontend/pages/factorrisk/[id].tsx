@@ -12,7 +12,7 @@ import { Button, Divider, Htag, P, Card } from '../../components';
 import cn from 'classnames';
 import { Panel } from '../../page-components';
 
-function ReductionPage({ process, risk, factorrisk, dataReduction }: IReductions): JSX.Element {
+function ReductionPage({ itproc, risk, factorrisk, dataReduction }: IReductions): JSX.Element {
 
 	const columns = [
 		{
@@ -38,18 +38,26 @@ function ReductionPage({ process, risk, factorrisk, dataReduction }: IReductions
 	};
 
 	const onButtonEditClick = () => {
-
+		router.push(`/edit/factorrisk/${factorrisk?.ID}`);
 	};
 
-	const onButtonDeleteClick = () => {
-
+	const onButtonDeleteClick = async () => {
+		const decision = confirm('Удалить фактор риска и все связанные мероприятия?');
+		if (decision) {
+			const res = await axios.delete<IProc[]>(API.factorRisk.delete + factorrisk?.ID);
+			if (res.status == 200) {
+				router.push(`/risk/${risk?.ID}`);
+			} else {
+				console.log(res);
+			};
+		}
 	};
 
 	return (
 		<Card>
 			<Htag tag='h1'>{`Фактор по данному риску: ${factorrisk?.Name}`}</Htag>
 			<Divider />
-			<P size='m'>{`ИТ-процесс: ${process?.Name}`}</P>
+			<P size='m'>{`ИТ-процесс: ${itproc?.Name}`}</P>
 			<Divider />
 			<P size='m'>{`Риск: ${risk?.Name}`}</P>
 			<Divider />
@@ -107,11 +115,12 @@ export const getStaticProps: GetStaticProps<IReductions> = async ({ params }: Ge
 	const risk: IRisk | undefined = dataRisks.shift();
 
 	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + risk?.CITPROC);
-	const process: IProc | undefined = dataProcess.shift();
+	const itproc: IProc | undefined = dataProcess.shift();
 
 	const { data: dataReduction } = await axios.get<IReduction[]>(API.reduction.byfactorRisk + params.id);
 
 	return {
-		props: { process, risk, factorrisk, dataReduction }
+		props: { itproc, risk, factorrisk, dataReduction },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { IProc, IProcesses, IRisk, IProcEdit } from '../../interfaces/processes.interface';
 import DataTable, { TableProps, TableRow } from 'react-data-table-component';
 import { Htag, Card, P, Divider, Input, Button } from '../../components';
@@ -18,15 +19,17 @@ export const ItprocEditForm = ({ ID, Name, RTO, Level, className, ...props }: It
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
 
-	//const [sName, setName] = useState<string>(Name);
-	//const [sRTO, setRTO] = useState<number>(RTO);
-	//const [sLevel, setLevel] = useState<string>(Level);
+	const router = useRouter();
 
 	const onSubmit = async (formData: IprocEditForm) => {
+
 		const res = await axios.put<ItprocEditSentResponse>(API.itproc.put, { ID, ...formData });
 		if (res.status == 201) {
 			setIsSuccess(true);
 			//reset();
+			setTimeout(() => {
+				router.push(`/itprocesses`);
+			}, 1000);
 		} else {
 			setError(res.statusText);
 		}

@@ -6,7 +6,7 @@ import cn from 'classnames';
 import styles from './RiskComponent.module.css';
 import { useRouter } from 'next/router';
 
-export const Risk = (itproc: IProc): JSX.Element => {
+export const Risk = (risk: IRisk): JSX.Element => {
 
 	const router = useRouter();
 	const { id } = router.query;
@@ -15,7 +15,9 @@ export const Risk = (itproc: IProc): JSX.Element => {
 		<Card>
 			<Htag tag='h1'>{"Добавить риск по ИТ-Процессу"}</Htag>
 			<Divider />
-			<RiskForm CITPROC={id} />
+			<RiskForm
+				CITPROC={Number(id)}
+				isNew={true} />
 		</Card>
 	);
 }

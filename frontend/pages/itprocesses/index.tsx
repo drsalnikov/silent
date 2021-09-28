@@ -29,6 +29,14 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 		}
 	];
 
+	const paginationComponentOptions = {
+		noRowsPerPage: false,
+		rowsPerPageText: 'выбрать по',
+		rangeSeparatorText: 'по',
+		selectAllRowsItem: true,
+		selectAllRowsItemText: 'показать все',
+	};
+
 	const router = useRouter();
 
 	const onRowClick = (row: IProc) => {
@@ -48,7 +56,9 @@ function ItprocessesPage({ data }: IProcesses): JSX.Element {
 				data={data}
 				highlightOnHover
 				pointerOnHover
+				pagination
 				onRowClicked={onRowClick}
+				paginationComponentOptions={paginationComponentOptions}
 			/>
 			<Divider />
 			<div>
@@ -72,6 +82,6 @@ export const getStaticProps: GetStaticProps<IProcesses> = async () => {
 
 	return {
 		props: { data },
-		revalidate: 120
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

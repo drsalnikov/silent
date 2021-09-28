@@ -5,31 +5,38 @@ import CloseIcon from './close.svg';
 import cn from 'classnames';
 import { Input, Textarea, Button, Htag, P } from '../index';
 import { useForm, Controller } from 'react-hook-form';
-
+import { useRouter } from 'next/router';
 import Select from 'react-select';
 import axios from 'axios';
 import { API } from '../../helpers/api';
 import { useState } from 'react';
 
-export const FactorRiskForm = ({ CRISK, className, data, ...props }: FactorRiskFormProps): JSX.Element => {
+
+export const FactorRiskForm = ({ ID, CFACTOR, CRISK, Set, Percent, isNew, className, dataFactors, ...props }: FactorRiskFormProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm<IFactorRiskForm>();
 
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
-	const [CFACTOR, setCFACTOR] = useState<number>();
+	const [sCFACTOR, setCFACTOR] = useState<number>(Number(CFACTOR));
+
+	const router = useRouter();
 
 	const onSubmit = async (formData: IFactorRiskForm) => {
-		const res = await axios.post(API.factorRisk.post, { CRISK, CFACTOR, ...formData });
+		const res = isNew
+			? await axios.post(API.factorRisk.post, { CRISK, CFACTOR: sCFACTOR, ...formData })
+			: await axios.put(API.factorRisk.put, { ID, CRISK, CFACTOR: sCFACTOR, ...formData });
 
 		if (res.status == 201) {
 			setIsSuccess(true);
-			reset();
+			setTimeout(() => {
+				router.push(`/risk/${CRISK}`);
+			}, 1000);
 		} else {
 			setError(res.statusText);
 		}
 	};
 
-	const options = data.map(elem => {
+	const options = dataFactors?.map(elem => {
 		return {
 			value: elem.ID,
 			label: elem.Name
@@ -50,13 +57,19 @@ export const FactorRiskForm = ({ CRISK, className, data, ...props }: FactorRiskF
 					name="CFACTOR"
 					placeholder='Факторы'
 					options={options}
-					onChange={(elem) => setCFACTOR(elem?.value)}
+					defaultValue={options?.find(el => el.value == CFACTOR)}
+					onChange={(elem) => {
+						if (elem) {
+							setCFACTOR(elem.value);
+						}
+					}}
 				/>
 				<Input type="number"
 					{...register('Set', { required: { value: true, message: 'Группа факторов' }, valueAsNumber: true })}
 					placeholder='Группа факторов'
 					error={errors.Set}
 					className={styles.description}
+					defaultValue={Set}
 					aria-invalid={errors.Set ? true : false}
 				/>
 				<Input type="number"
@@ -64,6 +77,7 @@ export const FactorRiskForm = ({ CRISK, className, data, ...props }: FactorRiskF
 					placeholder='Вероятность'
 					error={errors.Percent}
 					className={styles.description}
+					defaultValue={Percent}
 					aria-invalid={errors.Percent ? true : false}
 				/>
 				<div className={styles.submit}>

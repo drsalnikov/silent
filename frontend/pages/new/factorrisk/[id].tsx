@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 import { withLayout } from '../../../layout/Layout';
 import { FactorRisk } from '../../../page-components';
 import { IFactor, IFactorRisk, IFactors, IRisk } from '../../../interfaces/processes.interface';
@@ -7,14 +8,7 @@ import { API } from '../../../helpers/api';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-export const NewFactorRiskPage = ({ data }: IFactors): JSX.Element => {
-
-    return (
-        <FactorRisk data={data} />
-    );
-}
-
-export default withLayout(NewFactorRiskPage);
+export default withLayout(FactorRisk);
 
 export const getStaticPaths: GetStaticPaths = async () => {
     let paths: string[] = [];
@@ -30,18 +24,32 @@ export const getStaticPaths: GetStaticPaths = async () => {
     };
 };
 
-export const getStaticProps: GetStaticProps<IFactors> = async () => {
+export const getStaticProps: GetStaticProps<IFactors> = async ({ params }: GetStaticPropsContext<ParsedUrlQuery>) => {
 
-    const { data } = await axios.get<IFactor[]>(API.factor.get);
+    if (!params) {
+        return {
+            notFound: true
+        };
+    };
 
-    if (!data) {
+    const { data: dataFactors } = await axios.get<IFactor[]>(API.factor.get);
+    const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.id + params.id);
+    const risk = dataRisks[0];
+
+    if (!dataFactors) {
+        return {
+            notFound: true
+        };
+    }
+
+    if (!risk) {
         return {
             notFound: true
         };
     }
 
     return {
-        props: { data }
+        props: { risk, dataFactors }
     };
 };
 

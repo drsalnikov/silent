@@ -8,6 +8,7 @@ import { Textarea } from '../Textarea/Textarea';
 import { Button } from '../Button/Button';
 import { Htag } from '../Htag/Htag';
 import { useForm, Controller } from 'react-hook-form';
+import { useRouter } from 'next/router';
 import { IprocForm, ItprocSentResponse } from './ItprocForm.interface';
 import axios from 'axios';
 import { API } from '../../helpers/api';
@@ -15,18 +16,21 @@ import { useState } from 'react';
 
 export const ItprocForm = ({ className, ...props }: ItprocFormProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm<IprocForm>();
-
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
+	const router = useRouter();
 
 	const onSubmit = async (formData: IprocForm) => {
-
-		try {
-			const { data } = await axios.post<ItprocSentResponse>(API.itproc.post, { ...formData });
+		const res = await axios.post<ItprocSentResponse>(API.itproc.post, { ...formData });
+		if (res.status == 201) {
 			setIsSuccess(true);
 			reset();
-		} catch (e: any) {
-			setError(e.message);
+			setTimeout(() => {
+				router.push(`/itprocesses`);
+			}, 1000);
+
+		} else {
+			setError(res.statusText);
 		}
 	};
 
@@ -71,7 +75,7 @@ export const ItprocForm = ({ className, ...props }: ItprocFormProps): JSX.Elemen
 				</button>
 			</div>}
 			{error && <div className={cn(styles.error, styles.panel)} role="alert">
-				Что-то пошло не так, попробуйте обновить страницу
+				{error}
 				<button
 					onClick={() => setError(undefined)}
 					className={styles.close}

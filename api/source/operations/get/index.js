@@ -136,7 +136,7 @@ async function getItProc() {
   async function getActivity() {
     try {
       const pool = await sql.connect(config);
-      const activity = await pool.request().query('SELECT * from ACTIVITY');
+      const activity = await pool.request().query('SELECT a.*, f.name as factorName from ACTIVITY a join FACTOR f on a.CFACTOR = f.ID');
       return activity.recordsets;
     } catch (error) {
       console.log(error);
@@ -250,4 +250,5 @@ async function getItProc() {
   
     calcResult
   };
+  
   

@@ -15,10 +15,10 @@ const ItprocEdit = ({ process }: IProcEdit): JSX.Element => {
             <Htag tag='h1'>{"Изменить ИТ-процесс"}</Htag>
             <Divider />
             <ItprocEditForm
-                ID={process.ID}
-                Name={process.Name}
-                RTO={process.RTO}
-                Level={process.Level}
+                ID={process?.ID}
+                Name={process?.Name}
+                RTO={process?.RTO}
+                Level={process?.Level}
             />
         </Card>
     );
@@ -51,6 +51,12 @@ export const getStaticProps: GetStaticProps<IProcEdit> = async ({ params }: GetS
     const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + params.id);
 
     const process = dataProcess[0];
+
+    if (typeof process == 'undefined') {
+        return {
+            notFound: true
+        };
+    };
 
     return {
         props: { process }

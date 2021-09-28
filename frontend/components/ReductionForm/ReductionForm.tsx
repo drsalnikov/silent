@@ -5,7 +5,7 @@ import CloseIcon from './close.svg';
 import cn from 'classnames';
 import { Input, Textarea, Button, Htag, P } from '../index';
 import { useForm, Controller } from 'react-hook-form';
-
+import { useRouter } from 'next/router';
 import Select from 'react-select';
 import axios from 'axios';
 import { API } from '../../helpers/api';
@@ -17,13 +17,17 @@ export const ReductionForm = ({ CFACTORRISK, className, data, ...props }: Reduct
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
 	const [CACTIVITY, setCACTIVITY] = useState<number>();
+	const router = useRouter();
 
 	const onSubmit = async (formData: IReductionForm) => {
 		if (typeof CACTIVITY !== 'undefined') {
 			const data = await axios.post(API.reduction.post, { CFACTORRISK, CACTIVITY, ...formData });
 			if (data.status == 201) {
 				setIsSuccess(true);
-				reset();
+				//reset();
+				setTimeout(() => {
+					router.push(`/factorrisk/${CFACTORRISK}`);
+				}, 1000);
 			} else {
 				setError(data.statusText);
 			}
@@ -32,7 +36,7 @@ export const ReductionForm = ({ CFACTORRISK, className, data, ...props }: Reduct
 		}
 	};
 
-	const options = data.map(elem => {
+	const options = data?.map(elem => {
 		return {
 			value: elem.ID,
 			label: elem.Name

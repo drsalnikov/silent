@@ -32,12 +32,12 @@ function FactorPage({ factor, activities }: IFactorCard): JSX.Element {
 	const router = useRouter();
 
 	const onButtonClick = () => {
-		router.push(`/new/activity/${factor.ID}`);
+		//router.push(`/new/activity/${factor.ID}`);
 	};
 
 	return (
 		<Card>
-			<Htag tag='h1'>{`Фактор ${factor.Name}`}</Htag>
+			<Htag tag='h1'>{`Фактор ${factor?.Name}`}</Htag>
 			<Divider />
 			<P size='m'>{`Мероприятия:`}</P>
 			<Divider />
@@ -80,7 +80,14 @@ export const getStaticProps: GetStaticProps<IFactorCard> = async ({ params }: Ge
 
 	const factor: IFactor = factors[0];
 
+	if (!factor) {
+		return {
+			notFound: true
+		};
+	};
+
 	return {
-		props: { factor, activities }
+		props: { factor, activities },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

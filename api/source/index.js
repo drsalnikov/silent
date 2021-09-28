@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { request, response } = require('express');
-//const dboperations = require('./operations/dboperations');
 const getOperations = require('./operations/get/index');
 const putOperations = require('./operations/put/index');
 const postOperations = require('./operations/post/index');

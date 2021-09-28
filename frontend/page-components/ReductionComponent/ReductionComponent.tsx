@@ -17,7 +17,9 @@ export const Reduction = ({ data }: IReductionComponentProps): JSX.Element => {
 		<Card className={styles.wrapper}>
 			<Htag tag='h1'>{"Добавить мероприятия к фактору риска"}</Htag>
 			<Divider />
-			<ReductionForm data={data} CFACTORRISK={Number(id)} />
+			<ReductionForm
+				data={data}
+				CFACTORRISK={Number(id)} />
 		</Card>
 	);
 }

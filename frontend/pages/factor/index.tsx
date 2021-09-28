@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
 import React from 'react';
 import axios from 'axios';
-import { IProc, IProcesses, IFactor, IFactors } from '../../interfaces/processes.interface';
+import { IProc, IProcesses, IFactor, IFactorsData } from '../../interfaces/processes.interface';
 import { withLayout } from '../../layout/Layout';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
@@ -10,7 +10,7 @@ import DataTable from 'react-data-table-component';
 import { Button, Divider, Htag, Card, P } from '../../components';
 import cn from 'classnames';
 
-function AllFactorPage({ data }: IFactors): JSX.Element {
+function AllFactorPage({ dataFactors }: IFactorsData): JSX.Element {
 
 	const columns = [
 		{
@@ -41,7 +41,7 @@ function AllFactorPage({ data }: IFactors): JSX.Element {
 			<Divider />
 			<DataTable
 				columns={columns}
-				data={data}
+				data={dataFactors}
 				highlightOnHover
 				pointerOnHover
 				onRowClicked={onRowClick}
@@ -56,17 +56,18 @@ function AllFactorPage({ data }: IFactors): JSX.Element {
 
 export default withLayout(AllFactorPage);
 
-export const getStaticProps: GetStaticProps<IFactors> = async () => {
+export const getStaticProps: GetStaticProps<IFactorsData> = async () => {
 
-	const { data } = await axios.get<IFactor[]>(API.factor.get);
+	const { data: dataFactors } = await axios.get<IFactor[]>(API.factor.get);
 
-	if (!data) {
+	if (!dataFactors) {
 		return {
 			notFound: true
 		};
 	}
 
 	return {
-		props: { data }
+		props: { dataFactors },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

@@ -45,12 +45,20 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 	};
 
 	const onButtonEditClick = () => {
-
+		router.push(`/edit/risk/${risk?.ID}`);
 	};
 
 
-	const onButtonDeleteClick = () => {
-
+	const onButtonDeleteClick = async () => {
+		const decision = confirm('Удалить риск и все связанные записи?');
+		if (decision) {
+			const res = await axios.delete<IProc[]>(API.risk.delete + risk?.ID);
+			if (res.status == 200) {
+				router.push(`/itproc/${process?.ID}`);
+			} else {
+				console.log(res);
+			};
+		}
 	};
 
 	return (

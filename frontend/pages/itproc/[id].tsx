@@ -12,7 +12,7 @@ import { Button, Divider, Htag, P, Card } from '../../components';
 import { Panel } from '../../page-components';
 import cn from 'classnames';
 
-function ItprocPage({ process, dataRisks }: IRisks): JSX.Element {
+function ItprocPage({ itproc, dataRisks }: IRisks): JSX.Element {
 
 	const columns = [
 		{
@@ -38,21 +38,28 @@ function ItprocPage({ process, dataRisks }: IRisks): JSX.Element {
 	};
 
 	const onButtonAddRiskClick = () => {
-		router.push(`/new/risk/${process?.ID}`);
+		router.push(`/new/risk/${itproc?.ID}`);
 	};
 
-	const onButtonChangeClick = () => {
-		router.push(`/edit/itproc/${process?.ID}`);
+	const onButtonEditClick = () => {
+		router.push(`/edit/itproc/${itproc?.ID}`);
 	};
 
-	const onButtonDeleteClick = () => {
+	const onButtonDeleteClick = async () => {
 		const decision = confirm('Удалить ИТ-процесс и все связанные записи?');
-
+		if (decision) {
+			const res = await axios.delete<IProc[]>(API.itproc.delete + itproc?.ID);
+			if (res.status == 200) {
+				router.push(`/itprocesses`);
+			} else {
+				console.log(res);
+			};
+		}
 	};
 
 	return (
 		<Card>
-			<Htag tag='h1'>{`ИТ-процесс: ${process?.Name}`}</Htag>
+			<Htag tag='h1'>{`ИТ-процесс: ${itproc?.Name}`}</Htag>
 			<Divider />
 			<P size='l'>{`Риски:`}</P>
 			<Divider />
@@ -67,7 +74,7 @@ function ItprocPage({ process, dataRisks }: IRisks): JSX.Element {
 			<Panel buttons={[
 				//{ text: 'Добавить ИТ-процесс', appearance: 'primary', action: onButtonAddClick },
 				{ text: 'Добавить риск', appearance: 'primary', action: onButtonAddRiskClick },
-				{ text: 'Изменить', appearance: 'ghost', action: onButtonChangeClick },
+				{ text: 'Изменить', appearance: 'ghost', action: onButtonEditClick },
 				{ text: 'Удалить', appearance: 'warning', action: onButtonDeleteClick }
 			]} />
 		</Card>
@@ -101,9 +108,10 @@ export const getStaticProps: GetStaticProps<IRisks> = async ({ params }: GetStat
 	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + params.id);
 	const { data: dataRisks } = await axios.get<IRisk[]>(API.risk.byProcess + params.id);
 
-	const process: IProc | undefined = dataProcess.shift();
+	const itproc: IProc | undefined = dataProcess.shift();
 
 	return {
-		props: { process, dataRisks }
+		props: { itproc, dataRisks },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

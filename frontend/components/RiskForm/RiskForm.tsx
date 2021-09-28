@@ -5,22 +5,36 @@ import CloseIcon from './close.svg';
 import cn from 'classnames';
 import { Input, Textarea, Button, Htag, P } from '../index';
 import { useForm, Controller } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 import axios from 'axios';
 import { API } from '../../helpers/api';
 import { useState } from 'react';
 
-export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.Element => {
+export const RiskForm = ({ ID, CITPROC, Name, Damage, className, isNew, ...props }: RiskFormProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm<IRiskForm>();
 
 	const [isSuccess, setIsSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string>();
+	const router = useRouter();
 
 	const onSubmit = async (formData: IRiskForm) => {
-		const res = await axios.post(API.risk.post, { CITPROC, ...formData });
+
+		const res = isNew
+			? await axios.post(API.risk.post, { CITPROC, ...formData })
+			: await axios.put(API.risk.put, { ID, CITPROC, ...formData });
+
 		if (res.status == 201) {
 			setIsSuccess(true);
-			reset();
+			//reset();
+			setTimeout(() => {
+				if (isNew) {
+					router.push(`/itproc/${CITPROC}`);
+				} else {
+					router.push(`/risk/${ID}`);
+				}
+
+			}, 1000);
 		} else {
 			setError(res.statusText);
 		}
@@ -36,6 +50,7 @@ export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.E
 					placeholder='Наименование риска'
 					error={errors.Name}
 					className={styles.description}
+					defaultValue={Name}
 					aria-invalid={errors.Name ? true : false}
 				/>
 				<Input type="number"
@@ -43,6 +58,7 @@ export const RiskForm = ({ CITPROC, className, ...props }: RiskFormProps): JSX.E
 					placeholder='Потенциальный ущерб'
 					error={errors.Damage}
 					className={styles.description}
+					defaultValue={Damage}
 					aria-invalid={errors.Damage ? true : false}
 				/>
 				<div className={styles.submit}>

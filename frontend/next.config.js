@@ -2,6 +2,9 @@ module.exports = {
 	images: {
 		domains: ['silent']
 	},
+	env: {
+		revalidate: 5,
+	},
 	webpack(config, options) {
 		config.module.rules.push({
 			loader: '@svgr/webpack',

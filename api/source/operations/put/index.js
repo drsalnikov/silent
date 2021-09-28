@@ -55,7 +55,7 @@ async function modifyItProc(itProc) {
         .input('CRISK', sql.Int, factorRisk.CRISK)
         .input('Set', sql.Int, factorRisk.Set)
         .input('Percent', sql.Float, factorRisk.Percent)
-        .query('UPDATE FACTORRISK SET CFACTOR = @CFACTOR, CRISK = @CRISK, Set = @Set, Percent = @Percent where ID = @ID');
+        .query('UPDATE FACTORRISK SET CFACTOR = @CFACTOR, CRISK = @CRISK, [Set] = @Set, [Percent] = @Percent where ID = @ID');
       return updateFactorRisk.recordsets;
     } catch (err) {
       console.log(err);

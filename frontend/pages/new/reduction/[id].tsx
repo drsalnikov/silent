@@ -10,9 +10,6 @@ import { useRouter } from 'next/router';
 
 export const NewReductionPage = ({ data }: IActivities): JSX.Element => {
 
-    const router = useRouter();
-    const { id } = router.query;
-
     return (
         <Reduction data={data} />
     );

@@ -10,10 +10,12 @@ import { API } from '../../helpers/api';
 import DataTable from 'react-data-table-component';
 import cn from 'classnames';
 import axios from 'axios';
+import formatRelativeWithOptions from 'date-fns/fp/formatRelativeWithOptions/index';
 
 export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 	const { register, control, handleSubmit, formState: { errors }, reset, clearErrors } = useForm();
 	const [summa, setSumma] = useState<string>("");
+	const [pending, setPending] = useState(false);
 	const [riskBefore, setRiskBefore] = useState<number>(0);
 	const [riskAfter, setRiskAfter] = useState<number>(0);
 	const [effect, setEffect] = useState<number>(0);
@@ -40,13 +42,14 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 
 	const onSubmit = async (formData: IResultForm) => {
 		try {
+			setPending(true);
 			const { data } = await axios.get<IResult[]>(API.calc.get + summa);
 			setResult(data);
-
 			setRiskBefore(Math.round(Number(data[0]?.StartRisk) * 100) / 100);
 			setRiskAfter(Math.round(Number(data[0]?.FinalRisk) * 100) / 100);
 			setEffect(Math.round(Number(data[0]?.Economy) * 100) / 100);
 			reset();
+			setPending(false);
 		} catch (e: any) {
 			console.log(e.message);
 		}
@@ -80,6 +83,7 @@ export const Result = ({ className, ...props }: ResultProps): JSX.Element => {
 					data={result}
 					highlightOnHover
 					pointerOnHover
+					progressPending={pending}
 				/>
 				<Divider />
 				<P>Текущий риск: {riskBefore.toLocaleString()} руб.</P>

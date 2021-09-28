@@ -17,15 +17,17 @@ function ActivityPage({ data }: IActivities): JSX.Element {
 			name: 'Наименование мероприятия',
 			selector: row => row.Name,
 			wrap: true,
-			width: "70%"
+			width: "60%"
 		},
 		{
 			name: 'Стоимость',
 			selector: row => row.Summa,
 		},
 		{
-			name: 'Статус',
-			selector: row => row.IsActive,
+			name: 'Связанный фактор',
+			selector: row => row.factorName,
+			wrap: true,
+			width: "30%"
 		}
 	];
 
@@ -65,6 +67,7 @@ export const getStaticProps: GetStaticProps<IActivities> = async () => {
 	}
 
 	return {
-		props: { data }
+		props: { data },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };
