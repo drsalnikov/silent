@@ -68,7 +68,8 @@ export const getStaticProps: GetStaticProps<IFactorRiskEdit> = async ({ params }
     }
 
     return {
-        props: { factorrisk, dataFactors }
+        props: { factorrisk, dataFactors },
+        revalidate: Number(process.env.revalidate) || 30
     };
 };
 

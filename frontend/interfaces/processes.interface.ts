@@ -6,7 +6,7 @@ export interface IProc extends Record<string, unknown> {
 }
 
 export interface IProcEdit extends Record<string, unknown> {
-	process: IProc
+	itproc: IProc
 }
 
 export interface IProcesses extends Record<string, unknown> {

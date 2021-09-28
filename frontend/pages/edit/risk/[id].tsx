@@ -58,6 +58,7 @@ export const getStaticProps: GetStaticProps<IRiskEdit> = async ({ params }: GetS
     };
 
     return {
-        props: { risk }
+        props: { risk },
+        revalidate: Number(process.env.revalidate) || 30
     };
 };

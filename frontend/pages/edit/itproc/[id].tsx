@@ -8,17 +8,17 @@ import axios from 'axios';
 import { IProc, IProcEdit } from '../../../interfaces/processes.interface';
 
 
-const ItprocEdit = ({ process }: IProcEdit): JSX.Element => {
+const ItprocEdit = ({ itproc }: IProcEdit): JSX.Element => {
 
     return (
         <Card>
             <Htag tag='h1'>{"Изменить ИТ-процесс"}</Htag>
             <Divider />
             <ItprocEditForm
-                ID={process?.ID}
-                Name={process?.Name}
-                RTO={process?.RTO}
-                Level={process?.Level}
+                ID={itproc?.ID}
+                Name={itproc?.Name}
+                RTO={itproc?.RTO}
+                Level={itproc?.Level}
             />
         </Card>
     );
@@ -50,15 +50,16 @@ export const getStaticProps: GetStaticProps<IProcEdit> = async ({ params }: GetS
 
     const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + params.id);
 
-    const process = dataProcess[0];
+    const itproc = dataProcess[0];
 
-    if (typeof process == 'undefined') {
+    if (typeof itproc == 'undefined') {
         return {
             notFound: true
         };
     };
 
     return {
-        props: { process }
+        props: { itproc },
+        revalidate: Number(process.env.revalidate) || 30
     };
 };
