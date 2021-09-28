@@ -11,7 +11,7 @@ import { Button, Divider, Htag, P, Card } from '../../components';
 import cn from 'classnames';
 import { Panel } from '../../page-components';
 
-function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.Element {
+function FactorRiskPage({ itproc, risk, dataFactorRisks }: IFactorRisks): JSX.Element {
 
 	const columns = [
 		{
@@ -54,7 +54,7 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 		if (decision) {
 			const res = await axios.delete<IProc[]>(API.risk.delete + risk?.ID);
 			if (res.status == 200) {
-				router.push(`/itproc/${process?.ID}`);
+				router.push(`/itproc/${itproc?.ID}`);
 			} else {
 				console.log(res);
 			};
@@ -65,7 +65,7 @@ function FactorRiskPage({ process, risk, dataFactorRisks }: IFactorRisks): JSX.E
 		<Card>
 			<Htag tag='h1'>{`Риск: ${risk?.Name}`}</Htag>
 			<Divider />
-			<P size='l'>{`ИТ-процесс: ${process?.Name}`}</P>
+			<P size='l'>{`ИТ-процесс: ${itproc?.Name}`}</P>
 			<Divider />
 			<P size='l'>{`Факторы риска:`}</P>
 			<Divider />
@@ -122,9 +122,10 @@ export const getStaticProps: GetStaticProps<IFactorRisks> = async ({ params }: G
 	const { data: dataProcess } = await axios.get<IProc[]>(API.itproc.id + risk?.CITPROC);
 	const { data: dataFactorRisks } = await axios.get<IFactorRisk[]>(API.factorRisk.byRisk + params.id);
 
-	const process: IProc | undefined = dataProcess.shift();
+	const itproc: IProc | undefined = dataProcess.shift();
 
 	return {
-		props: { process, risk, dataFactorRisks }
+		props: { itproc, risk, dataFactorRisks },
+		revalidate: Number(process.env.revalidate) || 30
 	};
 };

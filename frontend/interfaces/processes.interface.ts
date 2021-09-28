@@ -30,7 +30,7 @@ export interface IRiskEdit extends Record<string, unknown> {
 }
 
 export interface IFactorRisks extends Record<string, unknown> {
-	process: IProc | undefined;
+	itproc: IProc | undefined;
 	risk: IRisk | undefined;
 	dataFactorRisks: IFactorRisk[];
 }
